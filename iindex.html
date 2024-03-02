@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #calculator {
+            border: 4px solid #ccc;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            background-color: rgb(101, 101, 101);
+            border-style: outset;
+        }
+
+        #display {
+            font-size: 3em;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            background-color:  rgb(249, 249, 249);
+            border: 2px solid #b6b5b5;
+            border-style: inset;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        td {
+            background-color:rgb(37, 36, 36);
+            padding: 15px;
+            cursor: pointer;
+            color: white;
+        }
+
+        td:hover {
+            background-color: #7b7777;
+        }
+
+        .operator-button{
+           background-color: rgb(247, 120, 16); 
+        }
+
+        .operator-button:hover {
+            background-color: #ef8b45;
+        }
+
+        .sup{
+            background-color: rgb(255, 55, 0);
+        }
+        .sup:hover {
+            background-color: #ef6f15;
+        }
+
+        #history {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        #history div {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #373131;
+            border-radius: 5px;
+            margin: 0 5px;
+            overflow: auto;
+            max-height: 100px;
+            background-color: rgb(238, 244, 244);
+        }
+
+        #clearHistory {
+            background-color: #f32121;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <div id="display">0</div>
+        <table>
+            <tr>
+                <td onclick="appendToDisplay('7')">7</td>
+                <td onclick="appendToDisplay('8')">8</td>
+                <td onclick="appendToDisplay('9')">9</td>
+                <td  onclick="operate('/')"class="operator-button">/</td>
+            </tr>
+            <tr>
+                <td onclick="appendToDisplay('4')">4</td>
+                <td onclick="appendToDisplay('5')">5</td>
+                <td onclick="appendToDisplay('6')">6</td>
+                <td onclick="operate('*')"class="operator-button">*</td>
+            </tr>
+            <tr>
+                <td onclick="appendToDisplay('1')">1</td>
+                <td onclick="appendToDisplay('2')">2</td>
+                <td onclick="appendToDisplay('3')">3</td>
+                <td onclick="operate('+')"class="operator-button">+</td>
+            </tr>
+            <tr>
+                <td onclick="appendToDisplay('0')">0</td>
+                <td onclick="appendToDisplay('.')">.</td>
+                <td onclick="calculate()"class="sup">=</td>
+                <td onclick="operate('-')"class="operator-button">-</td>
+            </tr>
+            <tr>
+                <td  colspan="2"onclick="clearDisplay()"class="sup">AC</td>
+                <td onclick="deleteLast()"class="sup">←</td>
+                <td onclick="operate('%')"class="operator-button">%</td>
+            </tr>
+        </table>
+        <div id="history">
+            <div>
+                <strong>Calculation History:</strong>
+                <div id="calcHistory"></div>
+            </div>
+            <button id="clearHistory" onclick="clearHistory()">Clear History</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let calcHistory = document.getElementById('calcHistory');
+        let currentInput = '';
+
+        function appendToDisplay(value) {
+            currentInput += value;
+            display.textContent = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            display.textContent = '0';
+        }
+
+        function operate(operator) {
+            currentInput += ` ${operator} `;
+            display.textContent = currentInput;
+        }
+
+        function calculate() {
+            try {
+                const result = eval(currentInput);
+                addToHistory(currentInput, result);
+                display.textContent = result;
+                currentInput = result.toString();
+            } catch (error) {
+                display.textContent = 'Error';
+                currentInput = '';
+            }
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            display.textContent = currentInput || '0';
+        }
+
+        function addToHistory(expression, result) {
+            const historyItem = document.createElement('div');
+            historyItem.textContent = `${expression} = ${result}`;
+            calcHistory.prepend(historyItem);
+        }
+
+        function clearHistory() {
+            calcHistory.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
